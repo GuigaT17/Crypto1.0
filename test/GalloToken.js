@@ -1,7 +1,24 @@
 var GalloToken = artifacts.require("./GalloToken.sol");
 
 contract('GalloToken', function(accounts) {
-    it('sets the total supply upon deployments', function() {
+    var tokenInstance;
+
+    it('initializes the contract with the correct values', function(){
+        return GalloToken.deployed().then(function(instance) {
+            tokenInstance = instance;
+            return tokenInstance.name();
+        }).then(function(name) {
+            assert.equal(name, 'Gallo Token', 'has correct name');
+            return tokenInstance.symbol();
+        }).then(function(symbol) {
+            assert.equal(symbol, 'CAM', 'has correct symbol');
+            return tokenInstance.standard();
+        }).then(function(standard) {
+            assert.equal(standard, 'Gallo Token v1.0', 'has correct standard');
+        });
+    });
+
+    it('sets the initial supply upon deployments', function() {
         return GalloToken.deployed().then(function(instance) {
             tokenInstance = instance;
             return tokenInstance.totalSupply();
@@ -11,5 +28,5 @@ contract('GalloToken', function(accounts) {
         }).then(function(adminBalance){
             assert.equal(adminBalance.toNumber(), 56624, 'it allocates the initial supply to admin account');
         });
-    })
+    });
 })
